@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- 測試版專用：正式上線前請移除 noindex 與標題的【測試版】 -->
+<meta name="robots" content="noindex,nofollow"/>
+<meta name="theme-color" content="#F7F3EB"/>
+<title>【測試版】湯婆婆塔羅｜線上預約</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Noto+Serif+TC:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ───────── 變數與基礎 ───────── */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --cream:#F7F3EB; --cream2:#F0E9DC; --khaki:#D3C2A5; --khaki-d:#B39F7C;
+  --brown:#554034; --brown2:#7A6556;
+  --coral:#BC7868; --coral-d:#A9604F;
+  --mauve:#A895B0; --mauve-d:#6F5E79; --mauve-l:rgba(168,149,176,.16);
+  --card:#FFFCF6; --line:rgba(211,194,165,.85); --line2:rgba(211,194,165,.45);
+  --err:#B23A48;
+  /* 字體：Google Fonts 載入失敗時自動改用系統字體 */
+  --serif:'Noto Serif TC','Songti TC','Noto Serif CJK TC','Source Han Serif TC','PMingLiU','Georgia',serif;
+  --display:'Cormorant Garamond','Times New Roman','Georgia',serif;
+}
+html{-webkit-text-size-adjust:100%;}
+body{
+  background:var(--cream);color:var(--brown);font-family:var(--serif);
+  font-size:15px;line-height:1.8;min-height:100vh;overflow-x:hidden;
+  background-image:
+    radial-gradient(ellipse 90% 40% at 100% 0%,rgba(168,149,176,.16),transparent 70%),
+    radial-gradient(ellipse 80% 40% at 0% 30%,rgba(211,194,165,.22),transparent 70%);
+  background-attachment:scroll;
+}
+[hidden]{display:none!important;}
+img{max-width:100%;}
+.wrap{max-width:480px;margin:0 auto;padding-bottom:48px;}
+.page{display:none;}.page.active{display:block;}
+.sec{padding:0 16px;margin-top:22px;}
+.sec-label{font-size:12px;color:var(--mauve-d);letter-spacing:.28em;margin-bottom:14px;
+  display:flex;align-items:center;gap:12px;font-weight:500;}
+.sec-label::before,.sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--khaki));}
+.sec-label::after{background:linear-gradient(90deg,var(--khaki),transparent);}
+
+/* ───────── Hero ───────── */
+.hero{position:relative;overflow:hidden;text-align:center;padding:34px 22px 30px;
+  background:linear-gradient(180deg,#F3EBDD 0%,var(--cream) 100%);
+  border-bottom:1px solid var(--line2);}
+.hero > *:not(.deco){position:relative;z-index:1;}
+.deco{position:absolute;pointer-events:none;z-index:0;}
+.spark{color:var(--khaki-d);opacity:.5;font-size:14px;animation:tw 4s ease-in-out infinite;}
+.spark.s2{animation-delay:1.2s;color:var(--mauve);}
+.spark.s3{animation-delay:2.1s;}
+.spark.s4{animation-delay:.6s;color:var(--coral);}
+@keyframes tw{0%,100%{opacity:.25;transform:scale(.85);}50%{opacity:.85;transform:scale(1.1);}}
+.moon{top:16px;left:16px;width:34px;height:34px;opacity:.7;}
+.card-deco{width:40px;height:62px;border:1px solid var(--khaki);border-radius:6px;opacity:.5;
+  display:flex;align-items:center;justify-content:center;color:var(--khaki-d);font-size:14px;}
+.card-deco.c1{bottom:14px;left:-8px;transform:rotate(-14deg);}
+.card-deco.c2{top:24px;right:-6px;transform:rotate(12deg);}
+.logo{width:84px;height:84px;border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;
+  background:var(--card);border:2px solid var(--khaki);box-shadow:0 4px 18px rgba(85,64,52,.12);font-size:30px;overflow:hidden;}
+.logo img{width:100%;height:100%;object-fit:cover;display:block;}
+.brand{font-size:22px;font-weight:600;letter-spacing:.3em;padding-left:.3em;}
+.brand-en{font-family:var(--display);font-size:12px;letter-spacing:.34em;padding-left:.34em;color:var(--mauve-d);margin-top:2px;}
+.hero-title{margin:22px 0 14px;font-size:30px;line-height:1.45;font-weight:600;color:var(--brown);}
+.hero-title span{display:block;}
+.hero-title span:last-child{color:var(--coral-d);}
+.hero-intro{font-size:14px;color:var(--brown2);line-height:2;max-width:340px;margin:0 auto;}
+.hero-tag{margin-top:16px;font-size:12px;color:var(--mauve-d);letter-spacing:.06em;}
+.hero .btn{margin:20px auto 0;max-width:260px;}
+
+/* ───────── 公告（依台灣時間自動顯示）───────── */
+.banner{margin:16px 16px 0;border-radius:16px;padding:14px 16px;font-size:13.5px;line-height:1.9;}
+.banner.before{background:var(--mauve-l);border:1px solid rgba(168,149,176,.5);}
+.banner.during{background:rgba(188,120,104,.12);border:1.5px solid var(--coral);}
+.banner-t{font-weight:600;font-size:14px;margin-bottom:2px;}
+.banner.during .banner-t{color:var(--coral-d);}
+.banner .btn{margin-top:10px;min-height:44px;font-size:14px;}
+
+/* ───────── 關於 ───────── */
+.about{margin:18px 16px 0;padding:18px;background:var(--card);border:1px solid var(--line);border-radius:20px;
+  box-shadow:0 2px 14px rgba(85,64,52,.05);text-align:center;}
+.about-h{font-size:16px;font-weight:600;margin-bottom:6px;}
+.about p{font-size:13.5px;color:var(--brown2);line-height:2;}
+.about .slogan{margin-top:10px;font-size:12.5px;color:var(--coral-d);letter-spacing:.04em;}
+
+/* ───────── 進度列 ───────── */
+.progress{display:flex;align-items:center;padding:10px 20px;margin-top:22px;background:rgba(247,243,235,.94);
+  border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);position:sticky;top:0;z-index:20;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);}
+.step{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;}
+.step-dot{width:26px;height:26px;border-radius:50%;border:1px solid var(--khaki);display:flex;align-items:center;
+  justify-content:center;font-size:12px;color:var(--brown2);background:var(--card);}
+.step.active .step-dot{border-color:var(--coral);color:var(--coral-d);box-shadow:0 0 0 3px rgba(188,120,104,.15);}
+.step.done .step-dot{background:var(--coral);border-color:var(--coral);color:#fff;}
+.step-label{font-size:11px;color:var(--brown2);}
+.step.active .step-label{color:var(--coral-d);font-weight:600;}
+.step-line{flex:1;height:1px;background:var(--line);margin:0 4px 16px;}
+
+/* ───────── 按鈕 ───────── */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:50px;padding:12px 16px;
+  border-radius:14px;border:0;font-family:var(--serif);font-size:16px;font-weight:600;cursor:pointer;
+  text-decoration:none;text-align:center;line-height:1.4;transition:transform .12s,box-shadow .2s;}
+.btn:active{transform:scale(.985);}
+.btn-primary{background:linear-gradient(135deg,var(--coral),var(--coral-d));color:#fff;box-shadow:0 4px 16px rgba(169,96,79,.28);}
+.btn-ghost{background:transparent;color:var(--brown);border:1px solid var(--khaki);font-weight:500;font-size:14px;min-height:46px;}
+.btn-line{background:linear-gradient(135deg,#06A94D,#04903F);color:#fff;box-shadow:0 4px 14px rgba(4,144,63,.25);}
+.btn-soft{background:var(--card);color:var(--brown);border:1px solid var(--khaki);box-shadow:none;}
+.btn[disabled]{background:#E3DACB;color:#8A7869;box-shadow:none;cursor:not-allowed;border:0;}
+.btn:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid rgba(188,120,104,.5);outline-offset:2px;}
+.btn + .btn{margin-top:10px;}
+
+/* ───────── 方案卡 ───────── */
+.svc{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px 18px 18px;margin-bottom:16px;
+  box-shadow:0 3px 18px rgba(85,64,52,.06);position:relative;}
+.svc.selected{border-color:var(--coral);box-shadow:0 4px 22px rgba(188,120,104,.18);}
+.svc-en{font-family:var(--display);font-size:12px;letter-spacing:.26em;color:var(--mauve-d);font-weight:600;}
+.svc-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:2px 0 6px;flex-wrap:wrap;}
+.svc-name{font-size:21px;font-weight:600;}
+.svc-price{font-family:var(--display);font-size:34px;font-weight:600;color:var(--coral-d);line-height:1;white-space:nowrap;}
+.svc-price small{font-size:14px;margin-right:2px;font-weight:500;}
+.svc-tag{display:inline-block;font-size:11px;color:var(--mauve-d);background:var(--mauve-l);border-radius:20px;padding:1px 9px;margin-left:6px;vertical-align:middle;font-weight:500;}
+.svc-intro{font-size:14px;color:var(--brown2);margin-bottom:12px;}
+.svc-note{font-size:12.5px;color:var(--brown2);background:var(--cream2);border-radius:10px;padding:8px 12px;margin-bottom:12px;line-height:1.8;}
+.svc-block{margin-bottom:12px;}
+.svc-block-t{font-size:12px;letter-spacing:.14em;color:var(--mauve-d);font-weight:600;margin-bottom:4px;}
+ul.tick{list-style:none;}
+ul.tick li{position:relative;padding-left:20px;font-size:14px;line-height:1.75;margin-bottom:2px;}
+ul.tick li::before{content:'✦';position:absolute;left:0;top:0;font-size:11px;color:var(--coral);line-height:2.2;}
+.more{margin:4px 0 14px;}
+.more summary{cursor:pointer;font-size:13px;color:var(--coral-d);padding:6px 0;list-style:none;font-weight:500;}
+.more summary::-webkit-details-marker{display:none;}
+.more summary::after{content:' ▾';}
+.more[open] summary::after{content:' ▴';}
+.more-body{padding:6px 0 2px;border-top:1px dashed var(--line);margin-top:4px;}
+.qs{display:grid;grid-template-columns:1fr 1fr;gap:2px 10px;margin:4px 0 10px;}
+.qs li{list-style:none;font-size:12.5px;color:var(--brown2);padding-left:12px;position:relative;line-height:1.7;margin-bottom:3px;}
+.qs li::before{content:'›';position:absolute;left:0;color:var(--coral);}
+.more-line{font-size:12.5px;color:var(--brown2);margin-bottom:4px;line-height:1.8;}
+
+/* 流程與付款 */
+.flow{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;}
+ol.flow-list{list-style:none;counter-reset:s;}
+ol.flow-list li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;padding:7px 0;font-size:14px;line-height:1.7;border-bottom:1px dashed var(--line2);}
+ol.flow-list li:last-child{border-bottom:0;}
+ol.flow-list li::before{content:counter(s);flex:0 0 24px;height:24px;border-radius:50%;background:var(--khaki);color:var(--brown);
+  font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.pay-strip{margin-top:12px;background:rgba(188,120,104,.1);border:1px solid rgba(188,120,104,.4);border-radius:12px;padding:10px 14px;font-size:13.5px;line-height:1.9;}
+.pay-strip b{color:var(--coral-d);}
+
+/* ───────── 表單 ───────── */
+.chip{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:10px 14px;font-size:14px;margin-bottom:14px;}
+.chip b{font-weight:600;}
+.chip button{background:none;border:0;color:var(--coral-d);font:500 13px var(--serif);text-decoration:underline;cursor:pointer;padding:6px;}
+.hint{background:var(--mauve-l);border:1px solid rgba(168,149,176,.45);border-radius:14px;padding:12px 14px;font-size:13.5px;line-height:1.9;margin-bottom:16px;}
+.form-h{font-size:13px;letter-spacing:.14em;font-weight:600;color:var(--mauve-d);margin:22px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line);}
+.field{margin-bottom:15px;}
+.field > label,.field > .lab{display:block;font-size:13.5px;font-weight:600;margin-bottom:6px;}
+.req{color:var(--err);margin-left:3px;}
+.opt{font-weight:400;font-size:12px;color:var(--brown2);margin-left:4px;}
+input[type=text],select,textarea{width:100%;padding:12px 13px;font-family:var(--serif);font-size:16px;color:var(--brown);
+  background:#FFFEFA;border:1px solid var(--khaki);border-radius:12px;outline:none;-webkit-appearance:none;appearance:none;line-height:1.6;}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%237A6556' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 13px center;padding-right:36px;text-overflow:ellipsis;}
+textarea{resize:vertical;min-height:110px;}
+input:focus,select:focus,textarea:focus{border-color:var(--coral);}
+.field.bad input,.field.bad select,.field.bad textarea,.field.bad .pills{border-color:var(--err);}
+.err{color:var(--err);font-size:12.5px;margin-top:5px;line-height:1.6;}
+.err:empty{display:none;}
+.dates{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:8px;}
+.dates select{padding-left:10px;padding-right:26px;background-position:right 9px center;}
+.count{text-align:right;font-size:11.5px;color:var(--brown2);margin-top:2px;}
+.pills{display:grid;grid-template-columns:1fr;gap:8px;border-radius:14px;}
+.pill{position:relative;display:block;}
+.pill input{position:absolute;opacity:0;inset:0;width:100%;height:100%;cursor:pointer;}
+.pill span{display:flex;align-items:center;min-height:48px;padding:10px 14px;border:1px solid var(--khaki);border-radius:14px;background:#FFFEFA;font-size:15px;}
+.pill input:checked + span{border-color:var(--coral);background:rgba(188,120,104,.1);font-weight:600;color:var(--coral-d);box-shadow:0 0 0 2px rgba(188,120,104,.15);}
+.pill input:focus-visible + span{outline:3px solid rgba(188,120,104,.5);outline-offset:2px;}
+.topic-hint{font-size:13px;color:var(--brown2);background:var(--cream2);border-radius:12px;padding:10px 12px;margin-bottom:14px;}
+.panel{border-left:3px solid var(--khaki);padding-left:12px;margin-bottom:6px;}
+details.preview{margin:16px 0 4px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px;}
+details.preview summary{cursor:pointer;font-size:13px;color:var(--mauve-d);font-weight:600;}
+details.preview pre{white-space:pre-wrap;word-break:break-word;font-family:var(--serif);font-size:12.5px;color:var(--brown2);margin-top:8px;line-height:1.8;}
+.summary-err{display:none;background:rgba(178,58,72,.08);border:1px solid var(--err);color:var(--err);border-radius:12px;padding:10px 14px;font-size:13.5px;margin-bottom:12px;}
+.summary-err.show{display:block;}
+.mini-privacy{font-size:12px;color:var(--brown2);margin:12px 2px 4px;line-height:1.8;}
+.mini-privacy a{color:var(--coral-d);}
+
+/* 占卜須知 */
+details.rules{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-top:18px;overflow:hidden;}
+details.rules > summary{cursor:pointer;padding:14px 16px;font-size:14px;font-weight:600;color:var(--coral-d);list-style:none;display:flex;justify-content:space-between;align-items:center;}
+details.rules > summary::-webkit-details-marker{display:none;}
+details.rules > summary::after{content:'▾';}
+details.rules[open] > summary::after{content:'▴';}
+.rule{display:flex;gap:10px;padding:10px 16px;border-top:1px dashed var(--line);font-size:13.5px;line-height:1.8;}
+.rule-i{flex:0 0 22px;font-size:16px;}
+.rule b{display:block;font-weight:600;}
+.rule small{display:block;color:var(--brown2);font-size:12.5px;line-height:1.8;}
+
+/* ───────── 完成頁 ───────── */
+.done-icon{font-size:38px;text-align:center;margin:20px 0 6px;}
+.done-title{font-size:21px;font-weight:600;text-align:center;margin-bottom:10px;}
+.must{background:rgba(188,120,104,.12);border:1.5px solid var(--coral);border-radius:16px;padding:14px 16px;font-size:14.5px;line-height:1.9;text-align:center;margin-bottom:14px;}
+.must b{color:var(--coral-d);}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;}
+.sum-row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed var(--line2);font-size:14px;}
+.sum-row:last-child{border-bottom:0;}
+.sum-row span:last-child{font-weight:600;text-align:right;word-break:break-word;}
+.step-t{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;margin-bottom:10px;}
+.step-n{flex:0 0 24px;height:24px;border-radius:50%;background:var(--coral);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;}
+#done-msg{width:100%;min-height:230px;font-size:14px;line-height:1.7;background:var(--cream2);margin-bottom:10px;resize:none;}
+.note-ok{background:rgba(79,122,90,.1);border:1.5px solid rgba(79,122,90,.5);border-radius:12px;padding:10px 14px;font-size:14px;line-height:1.9;text-align:center;margin-bottom:10px;}
+.note-ok b{color:#3F6B4B;}
+.note-bad{background:rgba(178,58,72,.08);border:1.5px solid var(--err);border-radius:12px;padding:10px 14px;font-size:14px;line-height:1.9;margin-bottom:10px;}
+.note-bad b{color:var(--err);}
+.after{margin:8px 0 0;font-size:13px;color:var(--brown2);text-align:center;}
+.after-list .rule{padding-left:0;padding-right:0;}
+.after-list .rule:first-child{border-top:0;}
+.link-btn{background:none;border:0;color:var(--coral-d);text-decoration:underline;font:500 13.5px var(--serif);cursor:pointer;padding:8px;display:block;margin:6px auto 0;}
+
+/* 頁尾與隱私 */
+.foot{margin:26px 16px 0;text-align:center;font-size:12px;color:var(--brown2);}
+.foot details{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-bottom:10px;}
+.foot summary{cursor:pointer;font-weight:600;color:var(--mauve-d);text-align:center;}
+.foot ul{margin:8px 0 2px 16px;line-height:1.9;}
+noscript .ns{margin:16px;padding:14px;background:var(--card);border:1px solid var(--coral);border-radius:14px;text-align:center;}
+
+/* 審閱模式（網址加 ?review=1）：標出尚待確認的內容 */
+#review-bar{display:none;}
+body.review #review-bar{display:block;position:fixed;left:8px;bottom:8px;z-index:50;max-width:calc(100% - 16px);background:var(--brown);color:#fff;
+  font:12px/1.6 sans-serif;padding:6px 10px;border-radius:10px;opacity:.92;}
+body.review [data-tbc]{outline:1.5px dashed var(--coral);outline-offset:2px;}
+body.review [data-tbc]::after{content:'待確認';display:inline-block;margin-left:6px;font:11px/1.4 sans-serif;background:var(--coral);color:#fff;border-radius:8px;padding:0 6px;vertical-align:middle;}
+
+.dates>*,.qs>*,.pills>*,.svc-head>*,.chip>*,.sum-row>*{min-width:0;}
+details.preview pre,.sum-row span,.banner,.must,.note-ok,.note-bad{overflow-wrap:anywhere;}
+@media (prefers-reduced-motion:reduce){.spark{animation:none;opacity:.5;}.btn{transition:none;}}
+@media (min-width:420px){.pills{grid-template-columns:1fr 1fr 1fr;}.pill span{justify-content:center;text-align:center;padding:10px 6px;font-size:14px;}}
+@media (max-width:340px){.hero-title{font-size:26px;}.svc-price{font-size:30px;}.qs{grid-template-columns:1fr;}.dates{grid-template-columns:1.3fr 1fr 1fr;}}
+</style>
+</head>
+<body>
+<noscript><div class="ns">這個預約頁需要啟用 JavaScript。<br>也可以直接前往<a href="https://lin.ee/ob3hIrG">官方 LINE</a>留言預約。</div></noscript>
+<div class="wrap">
+
+<!-- ═════════ 首頁 Hero ═════════ -->
+<header class="hero" id="top">
+  <svg class="deco moon" viewBox="0 0 40 40" aria-hidden="true"><path d="M26 4A16 16 0 1 0 36 31 13 13 0 0 1 26 4z" fill="#D3C2A5"/></svg>
+  <span class="deco spark" style="top:26px;right:60px;" aria-hidden="true">✦</span>
+  <span class="deco spark s2" style="top:92px;left:34px;font-size:10px;" aria-hidden="true">✦</span>
+  <span class="deco spark s3" style="top:150px;right:26px;font-size:12px;" aria-hidden="true">✧</span>
+  <span class="deco spark s4" style="bottom:40px;right:44px;font-size:10px;" aria-hidden="true">✦</span>
+  <div class="deco card-deco c1" aria-hidden="true">✦</div>
+  <div class="deco card-deco c2" aria-hidden="true">☾</div>
+
+  <div class="logo"><img src="logo.png" width="84" height="84" alt="湯婆婆塔羅 LOGO" onerror="this.parentNode.textContent='🔮'"/></div>
+  <div class="brand">湯婆婆塔羅</div>
+  <div class="brand-en">GRANDMA TANG TAROT</div>
+  <h1 class="hero-title"><span>看不懂他的心？</span><span>陪妳找到下一步</span></h1>
+  <p class="hero-intro">透過塔羅，陪妳釐清感情中的困惑、對方的想法與關係趨勢，找到適合自己的下一步。<br>也提供工作、人生方向等占卜指引。</p>
+  <div class="hero-tag">湯婆婆塔羅｜陪妳看懂感情，找到下一步。</div>
+  <button type="button" class="btn btn-primary" id="cta-start">開始預約 ↓</button>
+</header>
+
+<!-- 預約公告（由程式依台灣時間自動顯示／隱藏） -->
+<div id="notice-slot"></div>
+
+<section class="about">
+  <div class="about-h">嗨，我是湯婆婆🔮</div>
+  <p>比起單純告訴妳占卜結果，我更希望結合牌面與現實情況，陪妳釐清困惑，找到適合自己的方向。</p>
+</section>
+
+<div id="booking-top"></div>
+<div class="progress" aria-label="預約進度">
+  <div class="step active" id="prog-1"><div class="step-dot">1</div><div class="step-label">選方案</div></div>
+  <div class="step-line"></div>
+  <div class="step" id="prog-2"><div class="step-dot">2</div><div class="step-label">填資料</div></div>
+  <div class="step-line"></div>
+  <div class="step" id="prog-3"><div class="step-dot">3</div><div class="step-label">傳 LINE</div></div>
+</div>
+
+<main>
+<!-- ═════════ 第一頁：選方案 ═════════ -->
+<section class="page active" id="page-1">
+  <div class="sec">
+    <div class="sec-label">選擇占卜方案</div>
+
+    <!-- 方案 A -->
+    <article class="svc" id="svc-A">
+      <div class="svc-en">SINGLE READING</div>
+      <div class="svc-head">
+        <h2 class="svc-name">單題指引</h2>
+        <div class="svc-price"><small>NT$</small>188</div>
+      </div>
+      <p class="svc-intro">聚焦一個問題，透過三張塔羅牌釐清現況與下一步方向。</p>
+      <div class="svc-note">此方案聚焦<b>一個問題</b>。若有多個問題或想全面了解，建議選擇「深度解析」。</div>
+      <div class="svc-block">
+        <div class="svc-block-t">適合這樣的妳</div>
+        <ul class="tick">
+          <li>已有明確想了解的問題。</li>
+          <li>希望釐清一件事的發展與建議。</li>
+        </ul>
+      </div>
+      <div class="svc-block">
+        <div class="svc-block-t">服務包含</div>
+        <ul class="tick">
+          <li>三張塔羅牌，聚焦單一問題</li>
+          <li>文字解析及具體建議</li>
+          <li>占卜完成後提供抽出的牌陣照片</li>
+          <li>收到解析後 24 小時內，可針對原解析內容延伸追問一次</li>
+        </ul>
+      </div>
+      <details class="more">
+        <summary>看更多內容</summary>
+        <div class="more-body">
+          <div class="svc-block-t">妳可能想問的問題</div>
+          <ul class="qs">
+            <li>他現在怎麼想？</li><li>我該繼續等嗎？</li>
+            <li>我們還有機會嗎？</li><li>工作為什麼不順？</li>
+            <li>關係為什麼一直卡住？</li><li>我真正卡住的原因？</li>
+          </ul>
+          <p class="more-line">婆婆會依妳的問題抽牌，不需要自己選牌。</p>
+          <p class="more-line">塔羅主要提供現況及未來 3～6 個月的趨勢。</p>
+          <p class="more-line">依個案資料，婆婆可能適度補充生命靈數或星座個性的觀察（非每次固定提供）。</p>
+        </div>
+      </details>
+      <button type="button" class="btn btn-primary plan-btn" data-plan="A" data-label="預約單題指引 →">預約單題指引 →</button>
+    </article>
+
+    <!-- 方案 B -->
+    <article class="svc" id="svc-B">
+      <div class="svc-en">IN-DEPTH READING</div>
+      <div class="svc-head">
+        <h2 class="svc-name">深度解析<span class="svc-tag">適合複雜情況</span></h2>
+        <div class="svc-price"><small>NT$</small>588</div>
+      </div>
+      <p class="svc-intro">以同一個故事核心為主，基本抽六張塔羅牌，從六個不同角度深入分析。</p>
+      <div class="svc-note">六個解析方向由湯婆婆依妳的故事規劃，必要時可以補牌。<b>不需要自己列出問題。</b></div>
+      <div class="svc-block">
+        <div class="svc-block-t">適合這樣的妳</div>
+        <ul class="tick">
+          <li>情況較複雜，希望從不同角度了解。</li>
+          <li>不知道該怎麼提問，希望由湯婆婆協助整理方向。</li>
+        </ul>
+      </div>
+      <div class="svc-block">
+        <div class="svc-block-t">服務包含</div>
+        <ul class="tick">
+          <li>基本六張塔羅牌，從同一個故事核心的六個角度分析（必要時補牌）</li>
+          <li>文字解析及具體行動建議</li>
+          <li>占卜完成後提供抽出的牌陣照片</li>
+          <li>收到解析後 24 小時內，可針對原解析內容延伸追問一次</li>
+        </ul>
+      </div>
+      <details class="more">
+        <summary>看更多內容</summary>
+        <div class="more-body">
+          <div class="svc-block-t">可能的解析方向（由婆婆依妳的故事規劃）</div>
+          <ul class="qs">
+            <li>他對這段關係的真實想法</li><li>為什麼關係一直反覆？</li>
+            <li>這段感情最大的問題</li><li>復合／穩定的可能</li>
+            <li>我真正卡住的原因</li><li>接下來該怎麼做</li>
+          </ul>
+          <p class="more-line">塔羅主要提供現況及未來 3～6 個月的趨勢。</p>
+          <p class="more-line">依個案資料，婆婆可能適度補充生命靈數或星座個性的觀察（非每次固定提供）。</p>
+        </div>
+      </details>
+      <button type="button" class="btn btn-primary plan-btn" data-plan="B" data-label="預約深度解析 →">預約深度解析 →</button>
+    </article>
+  </div>
+
+  <div class="sec">
+    <div class="flow">
+      <div class="sec-label" style="margin-bottom:8px;">預約流程</div>
+      <ol class="flow-list">
+        <li>選擇占卜方案</li>
+        <li>填寫預約資料</li>
+        <li>複製內容並傳送至官方 LINE</li>
+        <li>依訊息中的付款資訊完成付款</li>
+        <li>付款確認後安排解析</li>
+      </ol>
+      <div class="pay-strip">💳 付款方式：<b>銀行轉帳／信用卡付款</b><br>付款確認後才算完成預約喔！</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 第二頁：填資料 ═════════ -->
+<section class="page" id="page-2">
+  <div class="sec">
+    <div class="sec-label">填寫預約資料</div>
+    <div class="chip"><span>已選方案：<b id="chip-name"></b>　<span id="chip-price"></span></span><button type="button" data-go="1">更換</button></div>
+    <div class="hint">不知道該怎麼問也沒關係，可以先告訴婆婆事情經過，我會依照妳的情況協助整理解析方向。</div>
+    <div class="summary-err" id="sum-err" role="alert"></div>
+
+    <div class="form-h">基本資料</div>
+    <div class="field" id="fd-f-name">
+      <label for="f-name">稱呼<span class="req">*</span></label>
+      <input type="text" id="f-name" maxlength="30" placeholder="請輸入妳的稱呼" autocomplete="off"/>
+      <div class="err" id="e-f-name" aria-live="polite"></div>
+    </div>
+    <div class="field" id="fd-f-gender">
+      <label for="f-gender">性別<span class="opt">（選填）</span></label>
+      <select id="f-gender" autocomplete="off">
+        <option value="">不填</option><option>女</option><option>男</option><option>其他</option><option>不想說</option>
+      </select>
+    </div>
+    <div class="field" id="fd-f-sign">
+      <label for="f-sign">星座<span class="req">*</span></label>
+      <select id="f-sign" autocomplete="off"></select>
+      <div class="err" id="e-f-sign" aria-live="polite"></div>
+    </div>
+    <div class="field" id="fd-f-by">
+      <span class="lab">西元出生年月日<span class="req">*</span></span>
+      <div class="dates">
+        <select id="f-by" aria-label="出生年" autocomplete="off"></select>
+        <select id="f-bm" aria-label="出生月" autocomplete="off"></select>
+        <select id="f-bd" aria-label="出生日" autocomplete="off"></select>
+      </div>
+      <div class="err" id="e-f-by" aria-live="polite"></div>
+    </div>
+
+    <div class="form-h">想占卜的主題</div>
+    <div class="field" id="fd-topic">
+      <div class="pills" role="radiogroup" aria-label="諮詢主題">
+        <label class="pill"><input type="radio" name="topic" value="love"/><span>💕 感情／關係</span></label>
+        <label class="pill"><input type="radio" name="topic" value="work"/><span>💼 工作／事業</span></label>
+        <label class="pill"><input type="radio" name="topic" value="life"/><span>🌙 其他人生方向</span></label>
+      </div>
+      <div class="err" id="e-topic" aria-live="polite"></div>
+    </div>
+    <div class="topic-hint" id="topic-hint">請先選擇主題，下方會出現對應的填寫欄位。</div>
+
+    <!-- 感情／關係 -->
+    <div class="panel" id="panel-love" hidden>
+      <div class="field" id="fd-l-status">
+        <label for="l-status">感情狀態<span class="req">*</span></label>
+        <select id="l-status" autocomplete="off">
+          <option value="">請選擇</option><option>單身</option><option>暗戀中</option><option>曖昧</option><option>交往中</option>
+          <option>冷戰</option><option>斷聯</option><option>分手</option><option>考慮復合</option><option>已婚</option><option>其他</option>
+        </select>
+        <div class="err" id="e-l-status" aria-live="polite"></div>
+      </div>
+      <div class="field">
+        <label for="l-pname">對方稱呼<span class="opt">（選填）</span></label>
+        <input type="text" id="l-pname" maxlength="30" autocomplete="off" placeholder="例如：他、小明"/>
+      </div>
+      <div class="field">
+        <label for="l-psign">對方星座<span class="opt">（選填）</span></label>
+        <select id="l-psign" autocomplete="off"></select>
+      </div>
+      <div class="field" id="fd-l-pby">
+        <span class="lab">對方西元出生年月日<span class="opt">（選填）</span></span>
+        <div class="dates">
+          <select id="l-pby" aria-label="對方出生年" autocomplete="off"></select>
+          <select id="l-pbm" aria-label="對方出生月" autocomplete="off"></select>
+          <select id="l-pbd" aria-label="對方出生日" autocomplete="off"></select>
+        </div>
+        <div class="err" id="e-l-pby" aria-live="polite"></div>
+      </div>
+      <div class="field" id="fd-l-story">
+        <label for="l-story">事情經過與目前困惑<span class="req">*</span></label>
+        <textarea id="l-story" maxlength="1000" data-count="1" placeholder="說說事情的來龍去脈，以及目前讓妳困惑的地方。寫得越完整，解析越貼近妳的狀況。"></textarea>
+        <div class="count"></div>
+        <div class="err" id="e-l-story" aria-live="polite"></div>
+      </div>
+      <div class="field">
+        <label for="l-dir">想透過塔羅了解的方向<span class="opt">（選填）</span></label>
+        <textarea id="l-dir" maxlength="500" data-count="1" style="min-height:80px" placeholder="例如：他現在的想法、我們接下來的趨勢。塔羅主要看現況及未來 3～6 個月。"></textarea>
+        <div class="count"></div>
+      </div>
+    </div>
+
+    <!-- 工作／事業 -->
+    <div class="panel" id="panel-work" hidden>
+      <div class="field" id="fd-w-status">
+        <label for="w-status" data-tbc>目前工作狀態<span class="req">*</span></label>
+        <select id="w-status" autocomplete="off">
+          <option value="">請選擇</option><option>在職</option><option>待業／求職中</option><option>準備轉職</option>
+          <option>創業／自由工作</option><option>學生</option><option>其他</option>
+        </select>
+        <div class="err" id="e-w-status" aria-live="polite"></div>
+      </div>
+      <div class="field">
+        <label for="w-industry" data-tbc>工作性質・行業<span class="opt">（選填）</span></label>
+        <input type="text" id="w-industry" maxlength="40" autocomplete="off" placeholder="例如：業務、科技業"/>
+      </div>
+      <div class="field">
+        <label for="w-years" data-tbc>工作年資<span class="opt">（選填）</span></label>
+        <input type="text" id="w-years" maxlength="20" autocomplete="off" placeholder="例如：3 年"/>
+      </div>
+      <div class="field" id="fd-w-problem">
+        <label for="w-problem">目前遇到的工作問題<span class="req">*</span></label>
+        <textarea id="w-problem" maxlength="1000" data-count="1" placeholder="說說目前遇到的狀況與困擾。"></textarea>
+        <div class="count"></div>
+        <div class="err" id="e-w-problem" aria-live="polite"></div>
+      </div>
+      <div class="field">
+        <label for="w-compare">如果正在比較不同選擇，可填寫各選項的情況<span class="opt">（選填）</span></label>
+        <textarea id="w-compare" maxlength="500" data-count="1" style="min-height:80px" placeholder="例如：選項 A 是…；選項 B 是…"></textarea>
+        <div class="count"></div>
+      </div>
+      <div class="field">
+        <label for="w-dir">想了解的方向<span class="opt">（選填）</span></label>
+        <textarea id="w-dir" maxlength="500" data-count="1" style="min-height:80px" placeholder="塔羅主要看現況及未來 3～6 個月。"></textarea>
+        <div class="count"></div>
+      </div>
+    </div>
+
+    <!-- 其他人生方向 -->
+    <div class="panel" id="panel-life" hidden>
+      <div class="field" id="fd-o-story">
+        <label for="o-story">目前遇到的事情<span class="req">*</span></label>
+        <textarea id="o-story" maxlength="1000" data-count="1" placeholder="說說目前遇到的事情與困惑。"></textarea>
+        <div class="count"></div>
+        <div class="err" id="e-o-story" aria-live="polite"></div>
+      </div>
+      <div class="field">
+        <label for="o-dir">想了解的方向<span class="opt">（選填）</span></label>
+        <textarea id="o-dir" maxlength="500" data-count="1" style="min-height:80px" placeholder="塔羅主要看現況及未來 3～6 個月。"></textarea>
+        <div class="count"></div>
+      </div>
+    </div>
+
+    <details class="preview">
+      <summary>預覽將傳送的內容</summary>
+      <pre id="f-preview-txt"></pre>
+    </details>
+
+    <!-- 占卜須知（保留七項、可展開） -->
+    <details class="rules" id="rules">
+      <summary>📋 占卜須知（送出前請閱讀）</summary>
+      <div class="rule"><span class="rule-i">📋</span><div><b>預約前請先整理好事情經過</b><small>清楚描述妳的問題與背景，有助於婆婆更準確地為妳解析。</small></div></div>
+      <div class="rule"><span class="rule-i">🌙</span><div><b>不受理的占卜項目</b><small>前世今生・靈魂相關、健康、生死、法律、賭博、投資博弈、考試結果等相關問題。</small></div></div>
+      <div class="rule"><span class="rule-i">🔮</span><div><b>塔羅主要提供現況及未來 3～6 個月趨勢</b><small>提供方向與建議，結果非絕對，未來仍掌握在妳手中。</small></div></div>
+      <div class="rule" data-tbc><span class="rule-i">🔒</span><div><b>解析後不接受退款</b><small>占卜屬於客製化服務，有效後即開始為妳解析。</small></div></div>
+      <div class="rule"><span class="rule-i">💛</span><div><b>請理性看待結果與建議</b><small>塔羅是指引，不是命定。妳的選擇，決定妳的未來。</small></div></div>
+      <div class="rule"><span class="rule-i">🕐</span><div><b>營業時間 10:00～22:00｜付款確認後 24 小時內解析</b><small>預約量較多時可能需要 48 小時，依下單順序回覆，請耐心等候。</small></div></div>
+      <div class="rule"><span class="rule-i">💬</span><div><b>解析後可延伸追問一次</b><small>收到解析後 24 小時內，可針對原解析內容延伸追問一次，建議整理好再一次提出。</small></div></div>
+    </details>
+
+    <p class="mini-privacy">妳填寫的內容只會在這個頁面整理成文字，不會被網站儲存或上傳。<a href="#privacy" id="privacy-link">隱私說明</a></p>
+
+    <div style="margin-top:14px;">
+      <button type="button" class="btn btn-primary" id="btn-submit">整理預約內容 →</button>
+      <button type="button" class="btn btn-ghost" data-go="1">← 返回選擇方案</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 第三頁：複製並傳送 ═════════ -->
+<section class="page" id="page-3">
+  <div class="sec">
+    <div class="done-icon">📝</div>
+    <div class="done-title">預約內容整理好了</div>
+    <div class="must"><b>還沒完成預約喔！</b><br>請記得將預約內容貼上並傳送至官方 LINE，<b>付款確認後才算完成預約</b>喔！</div>
+
+    <div class="card" id="done-sum"></div>
+
+    <div class="card">
+      <div class="step-t"><span class="step-n">1</span>複製預約內容</div>
+      <textarea id="done-msg" readonly aria-label="預約內容"></textarea>
+      <button type="button" class="btn btn-soft" id="copy-btn">📋 點這裡複製預約內容</button>
+      <p class="after" id="before-copy">複製後再前往 LINE 貼上傳送。訊息內已附上付款資訊（銀行轉帳／信用卡）。</p>
+
+      <div id="after-copy" hidden>
+        <div class="note-ok" style="margin-top:10px;"><b>✓ 已複製！</b><br>接著開啟 LINE → 進入對話 → <b>長按輸入框 → 貼上 → 傳送</b></div>
+      </div>
+      <div id="copy-fail" hidden>
+        <div class="note-bad" style="margin-top:10px;"><b>自動複製沒有成功</b><br>請長按上方文字框，選「全選」→「拷貝」，再前往 LINE 貼上。</div>
+        <button type="button" class="btn btn-soft" id="manual-done">我已手動複製，繼續 →</button>
+      </div>
+    </div>
+
+    <div class="card" id="line-card" hidden>
+      <div class="step-t"><span class="step-n">2</span>前往官方 LINE 貼上並傳送</div>
+      <a class="btn btn-line" id="line-link" href="https://lin.ee/ob3hIrG" target="_blank" rel="noopener">➜ 開啟官方 LINE</a>
+      <p class="after">傳送後，請依訊息中的付款資訊完成付款。</p>
+    </div>
+
+    <div class="card after-list">
+      <div class="step-t">📋 傳送後請注意</div>
+      <div class="rule"><span class="rule-i">🔮</span><div><b>請先完成付款</b><small>並在訊息補上匯款後五碼，或傳送已付款截圖。付款確認後才算完成預約。</small></div></div>
+      <div class="rule"><span class="rule-i">🃏</span><div><b>婆婆確認後會與妳確認問題方向</b><small>若需要補充，婆婆會透過 LINE 聯繫妳。</small></div></div>
+      <div class="rule"><span class="rule-i">🕐</span><div><b>付款確認後 24 小時內解析</b><small>營業時間 10:00～22:00；預約量較多時可能需要 48 小時。</small></div></div>
+      <div class="rule"><span class="rule-i">💬</span><div><b>解析後可延伸追問一次</b><small>收到解析後 24 小時內，可針對原內容追問一次。</small></div></div>
+    </div>
+
+    <button type="button" class="btn btn-ghost" data-go="2">← 返回修改資料</button>
+    <button type="button" class="link-btn" id="btn-reset">清除全部內容，重新填寫</button>
+  </div>
+</section>
+</main>
+
+<footer class="foot" id="privacy">
+  <details>
+    <summary>隱私說明</summary>
+    <ul>
+      <li>這個網站不會儲存、上傳或分析妳填寫的資料，也沒有使用追蹤工具。</li>
+      <li>預約內容只會在妳的瀏覽器中整理成文字，由妳自行複製後傳送到官方 LINE。</li>
+      <li>為了顯示字體，頁面會向 Google Fonts 載入字體檔，Google 可能因此取得妳的裝置連線資訊。</li>
+      <li data-tbc>傳送到官方 LINE 後的資料，由婆婆用於本次預約與占卜解析，並適用 LINE 的隱私政策。</li>
+      <li>請避免填寫身分證字號、帳戶密碼等與占卜無關的敏感資訊。</li>
+    </ul>
+  </details>
+  <div>© 湯婆婆塔羅 GRANDMA TANG TAROT</div>
+</footer>
+</div>
+
+<div id="review-bar"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ═════════ 設定區（日後要改的內容集中在這裡）═════════ */
+var CONFIG={
+  LINE_URL:'https://lin.ee/ob3hIrG',
+  BANK:'822 中國信託 901621892055',
+  PORTALY:'https://portaly.cc/grandma-tang-tarot',
+  /* 暫停預約：from 當天 00:00 起暫停，resume 當天 00:00 恢復（台灣時間） */
+  CLOSURES:[{from:'2026-11-16',resume:'2026-11-22'}],
+  PRE_NOTICE_DAYS:14,        /* 暫停前幾天開始顯示預告公告 */
+  MIN_YEAR:1930,             /* 生日可選的最早年份 */
+  ALLOW_TEST_PARAMS:true     /* 測試版專用：允許 ?now=YYYY-MM-DD 與 ?review=1，正式上線改成 false */
+};
+var PLANS={A:{name:'單題指引',price:188,en:'SINGLE READING'},B:{name:'深度解析',price:588,en:'IN-DEPTH READING'}};
+var TOPICS={love:'感情／關係',work:'工作／事業',life:'其他人生方向'};
+var SIGNS=['牡羊座','金牛座','雙子座','巨蟹座','獅子座','處女座','天秤座','天蠍座','射手座','摩羯座','水瓶座','雙魚座','不清楚'];
+var WD=['日','一','二','三','四','五','六'];
+var DATE_SELF=['f-by','f-bm','f-bd'], DATE_PARTNER=['l-pby','l-pbm','l-pbd'];
+
+var qs=new URLSearchParams(location.search);
+var REVIEW=CONFIG.ALLOW_TEST_PARAMS && qs.get('review')==='1';
+var state={plan:null};
+var curTopic=null, stash={};
+
+function $(id){return document.getElementById(id);}
+function val(id){var e=$(id);return e?String(e.value).trim():'';}
+
+/* ═════════ 台灣時間與預約開關 ═════════ */
+function twToday(){
+  if(CONFIG.ALLOW_TEST_PARAMS){var n=qs.get('now');if(n && /^\d{4}-\d{2}-\d{2}$/.test(n))return n;}
+  return new Date(Date.now()+8*3600000).toISOString().slice(0,10);   /* 台灣固定 UTC+8、無日光節約 */
+}
+function toUTC(s){var p=s.split('-');return Date.UTC(+p[0],+p[1]-1,+p[2]);}
+function dayDiff(a,b){return Math.round((toUTC(b)-toUTC(a))/86400000);}
+function addDays(s,n){return new Date(toUTC(s)+n*86400000).toISOString().slice(0,10);}
+function fmtDay(s){var d=new Date(toUTC(s));return (d.getUTCMonth()+1)+'/'+d.getUTCDate()+'（'+WD[d.getUTCDay()]+'）';}
+function bookingState(){
+  var t=twToday(),i,c;
+  for(i=0;i<CONFIG.CLOSURES.length;i++){c=CONFIG.CLOSURES[i];if(t>=c.from&&t<c.resume)return{mode:'during',c:c};}
+  for(i=0;i<CONFIG.CLOSURES.length;i++){c=CONFIG.CLOSURES[i];if(t<c.from&&dayDiff(t,c.from)<=CONFIG.PRE_NOTICE_DAYS)return{mode:'before',c:c};}
+  return{mode:'open'};
+}
+function isClosed(){return bookingState().mode==='during';}
+function applyBookingState(){
+  var s=bookingState(),slot=$('notice-slot');
+  if(s.mode==='open'){slot.innerHTML='';}
+  else{
+    var range=fmtDay(s.c.from)+'～'+fmtDay(addDays(s.c.resume,-1)), back=fmtDay(s.c.resume);
+    if(s.mode==='before'){
+      slot.innerHTML='<div class="banner before" role="status"><div class="banner-t">📢 預約公告</div>'+
+        range+' 暫停占卜預約，'+back+' 恢復接單。<br>外出期間官方 LINE 仍可留言詢問，婆婆看到會回覆。</div>';
+    }else{
+      slot.innerHTML='<div class="banner during" role="status"><div class="banner-t">🌙 目前暫停預約</div>'+
+        '暫停期間：'+range+'，<b>'+back+' 恢復接單</b>。<br>外出期間官方 LINE 仍可留言詢問，婆婆看到會回覆。'+
+        '<a class="btn btn-line" href="'+CONFIG.LINE_URL+'" target="_blank" rel="noopener">前往官方 LINE 留言</a></div>';
+    }
+  }
+  var closed=s.mode==='during', back2=closed?fmtDay(s.c.resume):'';
+  document.querySelectorAll('.plan-btn').forEach(function(b){
+    b.disabled=closed;
+    b.textContent=closed?('暫停預約中｜'+back2+' 恢復接單'):b.getAttribute('data-label');
+  });
+  updateReviewBar();
+}
+function updateReviewBar(){
+  if(!REVIEW)return;
+  var s=bookingState();
+  $('review-bar').textContent='審閱模式｜台灣日期 '+twToday()+'｜預約狀態：'+({open:'開放中',before:'開放中（顯示預告）',during:'暫停中'})[s.mode];
+}
+
+/* ═════════ 頁面切換 ═════════ */
+function goPage(n,noScroll){
+  if(n>=2 && isClosed()){applyBookingState();n=1;}
+  if(n===2 && !state.plan){n=1;}
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  $('page-'+n).classList.add('active');
+  ['prog-1','prog-2','prog-3'].forEach(function(id,i){
+    var el=$(id);el.classList.remove('active','done');
+    if(i<n-1)el.classList.add('done');else if(i===n-1)el.classList.add('active');
+  });
+  if(!noScroll){
+    try{var top=$('booking-top').getBoundingClientRect().top+(window.pageYOffset||0);window.scrollTo(0,top);}catch(e){}
+  }
+}
+
+/* ═════════ 選方案 ═════════ */
+function pickPlan(key){
+  if(isClosed()){applyBookingState();return;}
+  state.plan=key;
+  ['A','B'].forEach(function(k){$('svc-'+k).classList.toggle('selected',k===key);});
+  $('chip-name').textContent=PLANS[key].name;
+  $('chip-price').textContent='NT$'+PLANS[key].price;
+  updatePreview();
+  goPage(2);
+}
+
+/* ═════════ 星座、生日選單 ═════════ */
+function opt(sel,v,t){var o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o);}
+function initSigns(id,first){var s=$(id);opt(s,'',first);SIGNS.forEach(function(x){opt(s,x,x);});}
+function initDate(ids){
+  var y=$(ids[0]),m=$(ids[1]),d=$(ids[2]),i,cy=+twToday().slice(0,4);
+  opt(y,'','年');for(i=cy;i>=CONFIG.MIN_YEAR;i--)opt(y,String(i),i+'年');
+  opt(m,'','月');for(i=1;i<=12;i++)opt(m,String(i),i+'月');
+  opt(d,'','日');for(i=1;i<=31;i++)opt(d,String(i),i+'日');
+  y.addEventListener('change',function(){refreshDays(ids);});
+  m.addEventListener('change',function(){refreshDays(ids);});
+}
+function refreshDays(ids){
+  var y=+$(ids[0]).value,m=+$(ids[1]).value,sel=$(ids[2]),cur=+sel.value,max=31,i;
+  if(m){max=new Date(y||2000,m,0).getDate();}        /* 沒選年份時以閏年計 2 月 */
+  sel.innerHTML='';opt(sel,'','日');
+  for(i=1;i<=max;i++)opt(sel,String(i),i+'日');
+  if(cur&&cur<=max)sel.value=String(cur);
+}
+function readDate(ids){return{y:+$(ids[0]).value||0,m:+$(ids[1]).value||0,d:+$(ids[2]).value||0};}
+function fmtDate(b){return b.y+'年'+b.m+'月'+b.d+'日';}
+function isFuture(b){
+  var s=b.y+'-'+(b.m<10?'0':'')+b.m+'-'+(b.d<10?'0':'')+b.d;
+  return s>twToday();
+}
+function validDate(b){var dt=new Date(b.y,b.m-1,b.d);return dt.getFullYear()===b.y&&dt.getMonth()===b.m-1&&dt.getDate()===b.d;}
+
+/* ═════════ 動態主題欄位（切換時暫存／清空，不會殘留）═════════ */
+function panelFields(key){return $('panel-'+key).querySelectorAll('input,select,textarea');}
+function stashPanel(key){var s={};panelFields(key).forEach(function(el){s[el.id]=el.value;});stash[key]=s;}
+function clearPanel(key){
+  panelFields(key).forEach(function(el){if(el.tagName==='SELECT')el.selectedIndex=0;else el.value='';});
+  if(key==='love')refreshDays(DATE_PARTNER);
+  $('panel-'+key).querySelectorAll('.err').forEach(function(e){e.textContent='';});
+  $('panel-'+key).querySelectorAll('.field.bad').forEach(function(f){f.classList.remove('bad');});
+  updateCounters();
+}
+function restorePanel(key){
+  var s=stash[key];if(!s)return;
+  Object.keys(s).forEach(function(id){$(id).value=s[id];});
+  if(key==='love')refreshDays(DATE_PARTNER);
+  updateCounters();
+}
+function setTopic(t){
+  if(curTopic===t)return;
+  if(curTopic){stashPanel(curTopic);clearPanel(curTopic);$('panel-'+curTopic).hidden=true;}
+  curTopic=t;
+  $('panel-'+t).hidden=false;
+  $('topic-hint').hidden=true;
+  restorePanel(t);
+  setErr('topic','');
+  updatePreview();
+}
+function updateCounters(){
+  document.querySelectorAll('textarea[data-count]').forEach(function(t){
+    var c=t.parentNode.querySelector('.count');if(c)c.textContent=t.value.length+' / '+t.maxLength;
+  });
+}
+
+/* ═════════ 驗證 ═════════ */
+function setErr(id,msg){
+  var e=$('e-'+id);if(e)e.textContent=msg;
+  var f=$('fd-'+id);if(f)f.classList.toggle('bad',!!msg);
+}
+function clearAllErrors(){
+  document.querySelectorAll('.err').forEach(function(e){e.textContent='';});
+  document.querySelectorAll('.field.bad').forEach(function(f){f.classList.remove('bad');});
+  var se=$('sum-err');se.classList.remove('show');se.textContent='';
+}
+function validate(){
+  clearAllErrors();
+  var bad=[];   /* 依畫面順序記錄第一個錯誤位置 */
+  function fail(id,msg){setErr(id,msg);bad.push('fd-'+id);}
+  if(!val('f-name'))fail('f-name','請填寫稱呼');
+  if(!val('f-sign'))fail('f-sign','請選擇星座，不清楚可選「不清楚」');
+  var b=readDate(DATE_SELF);
+  if(!b.y||!b.m||!b.d)fail('f-by','請完整選擇出生年月日');
+  else if(!validDate(b))fail('f-by','這個日期不存在，請重新選擇');
+  else if(isFuture(b))fail('f-by','生日不能是未來的日期');
+  if(!curTopic)fail('topic','請選擇想占卜的主題');
+  if(curTopic==='love'){
+    if(!val('l-status'))fail('l-status','請選擇感情狀態');
+    var pb=readDate(DATE_PARTNER),n=(pb.y?1:0)+(pb.m?1:0)+(pb.d?1:0);
+    if(n>0&&n<3)fail('l-pby','請完整選擇對方生日，或全部清空');
+    else if(n===3){
+      if(!validDate(pb))fail('l-pby','這個日期不存在，請重新選擇');
+      else if(isFuture(pb))fail('l-pby','生日不能是未來的日期');
+    }
+    if(!val('l-story'))fail('l-story','請簡單說明事情經過與目前困惑');
+  }else if(curTopic==='work'){
+    if(!val('w-status'))fail('w-status','請選擇目前工作狀態');
+    if(!val('w-problem'))fail('w-problem','請說明目前遇到的工作問題');
+  }else if(curTopic==='life'){
+    if(!val('o-story'))fail('o-story','請說明目前遇到的事情');
+  }
+  if(bad.length){
+    var se=$('sum-err');se.textContent='還有 '+bad.length+' 個必填項目需要確認，已用紅字標示。';se.classList.add('show');
+    var first=$(bad[0]);
+    try{first.scrollIntoView({block:'center'});}catch(e){}
+    return false;
+  }
+  return true;
+}
+
+/* ═════════ 預約訊息（保留原本附帶付款資訊的做法）═════════ */
+function buildMsg(){
+  var p=PLANS[state.plan]||{name:'（尚未選擇）',price:'—'},L=[];
+  function req(v){return v||'（未填）';}
+  L.push('🔮 湯婆婆塔羅｜預約申請','━━━━━━━━━━━');
+  L.push('【方案】'+p.name+'（NT$'+p.price+'）');
+  L.push('【稱呼】'+req(val('f-name')));
+  if(val('f-gender'))L.push('【性別】'+val('f-gender'));
+  L.push('【星座】'+req(val('f-sign')));
+  var b=readDate(DATE_SELF);
+  L.push('【生日】'+((b.y&&b.m&&b.d)?fmtDate(b):'（未填）'));
+  L.push('【諮詢主題】'+(curTopic?TOPICS[curTopic]:'（未選）'));
+  if(curTopic==='love'){
+    L.push('','── 感情／關係 ──');
+    L.push('【感情狀態】'+req(val('l-status')));
+    if(val('l-pname'))L.push('【對方稱呼】'+val('l-pname'));
+    if(val('l-psign'))L.push('【對方星座】'+val('l-psign'));
+    var pb=readDate(DATE_PARTNER);
+    if(pb.y&&pb.m&&pb.d)L.push('【對方生日】'+fmtDate(pb));
+    L.push('','【事情經過與目前困惑】',req(val('l-story')));
+    if(val('l-dir'))L.push('','【想透過塔羅了解的方向】',val('l-dir'));
+  }else if(curTopic==='work'){
+    L.push('','── 工作／事業 ──');
+    L.push('【目前工作狀態】'+req(val('w-status')));
+    if(val('w-industry'))L.push('【工作性質・行業】'+val('w-industry'));
+    if(val('w-years'))L.push('【工作年資】'+val('w-years'));
+    L.push('','【目前遇到的工作問題】',req(val('w-problem')));
+    if(val('w-compare'))L.push('','【各選項的情況】',val('w-compare'));
+    if(val('w-dir'))L.push('','【想了解的方向】',val('w-dir'));
+  }else if(curTopic==='life'){
+    L.push('','── 其他人生方向 ──');
+    L.push('【目前遇到的事情】',req(val('o-story')));
+    if(val('o-dir'))L.push('','【想了解的方向】',val('o-dir'));
+  }
+  L.push('━━━━━━━━━━━','💳 付款方式（擇一）','🏦 匯款：'+CONFIG.BANK,'💳 信用卡：'+CONFIG.PORTALY,'',
+    '⚠️ 請先完成付款，再補上下方資料：','【匯款帳號後五碼】：','（信用卡付款請直接傳送「已付款截圖」）',
+    '━━━━━━━━━━━','以上為我的資料，麻煩婆婆幫我占卜 🙏');
+  return L.join('\n');
+}
+function updatePreview(){$('f-preview-txt').textContent=buildMsg();}
+
+/* ═════════ 完成頁與複製 ═════════ */
+function resetCopyUI(){
+  var btn=$('copy-btn');
+  btn.textContent='📋 點這裡複製預約內容';
+  $('before-copy').hidden=false;
+  $('after-copy').hidden=true;
+  $('copy-fail').hidden=true;
+  $('line-card').hidden=true;      /* 重新整理過內容，要重新複製才顯示 LINE 按鈕 */
+}
+function renderDone(){
+  var p=PLANS[state.plan],sum=$('done-sum');
+  sum.textContent='';
+  [['方案',p.name],['稱呼',val('f-name')],['諮詢主題',TOPICS[curTopic]],['費用','NT$'+p.price]].forEach(function(r){
+    var row=document.createElement('div');row.className='sum-row';
+    var a=document.createElement('span'),b=document.createElement('span');
+    a.textContent=r[0];b.textContent=r[1];row.appendChild(a);row.appendChild(b);sum.appendChild(row);
+  });
+  $('done-msg').value=buildMsg();
+  resetCopyUI();
+}
+function onCopied(){
+  $('copy-btn').textContent='✓ 已複製（內容有修改請重新複製）';
+  $('before-copy').hidden=true;
+  $('copy-fail').hidden=true;
+  $('after-copy').hidden=false;
+  $('line-card').hidden=false;
+}
+function showCopyFail(){
+  var ta=$('done-msg');
+  $('copy-fail').hidden=false;
+  $('after-copy').hidden=true;
+  try{ta.focus();ta.select();ta.setSelectionRange(0,ta.value.length);}catch(e){}
+}
+function legacyCopy(){
+  var ta=$('done-msg'),ok=false;
+  try{ta.focus();ta.select();ta.setSelectionRange(0,ta.value.length);ok=document.execCommand('copy');}catch(e){ok=false;}
+  if(ok)onCopied();else showCopyFail();
+}
+function copyMsg(){
+  var txt=$('done-msg').value;
+  if(navigator.clipboard&&window.isSecureContext){
+    navigator.clipboard.writeText(txt).then(onCopied,legacyCopy);
+  }else{legacyCopy();}
+}
+
+/* ═════════ 送出、重置 ═════════ */
+function submitForm(){
+  if(isClosed()){applyBookingState();goPage(1);return;}
+  if(!state.plan){goPage(1);return;}
+  if(!validate())return;
+  renderDone();
+  goPage(3);
+}
+function fullReset(){
+  ['f-name','f-gender','f-sign'].forEach(function(id){var e=$(id);if(e.tagName==='SELECT')e.selectedIndex=0;else e.value='';});
+  DATE_SELF.forEach(function(id){$(id).selectedIndex=0;});refreshDays(DATE_SELF);
+  ['love','work','life'].forEach(function(k){clearPanel(k);$('panel-'+k).hidden=true;});
+  document.querySelectorAll('input[name=topic]').forEach(function(r){r.checked=false;});
+  curTopic=null;stash={};state.plan=null;
+  $('topic-hint').hidden=false;
+  ['A','B'].forEach(function(k){$('svc-'+k).classList.remove('selected');});
+  clearAllErrors();updatePreview();
+  $('done-msg').value='';resetCopyUI();
+  goPage(1);
+}
+
+/* ═════════ 初始化 ═════════ */
+function init(){
+  initSigns('f-sign','請選擇');initSigns('l-psign','不填');
+  initDate(DATE_SELF);initDate(DATE_PARTNER);
+  if(REVIEW)document.body.classList.add('review');
+  document.querySelectorAll('.plan-btn').forEach(function(b){b.addEventListener('click',function(){pickPlan(b.getAttribute('data-plan'));});});
+  document.querySelectorAll('[data-go]').forEach(function(b){b.addEventListener('click',function(){goPage(+b.getAttribute('data-go'));});});
+  document.querySelectorAll('input[name=topic]').forEach(function(r){r.addEventListener('change',function(){if(r.checked)setTopic(r.value);});});
+  $('page-2').addEventListener('input',function(){updateCounters();updatePreview();});
+  $('page-2').addEventListener('change',updatePreview);
+  $('btn-submit').addEventListener('click',submitForm);
+  $('copy-btn').addEventListener('click',copyMsg);
+  $('manual-done').addEventListener('click',onCopied);
+  $('btn-reset').addEventListener('click',fullReset);
+  $('cta-start').addEventListener('click',function(){try{$('booking-top').scrollIntoView({behavior:'smooth'});}catch(e){}});
+  $('privacy-link').addEventListener('click',function(e){e.preventDefault();var d=document.querySelector('.foot details');d.open=true;try{d.scrollIntoView({block:'center'});}catch(x){}});
+  /* 清掉欄位錯誤：使用者一修改就移除該欄紅字 */
+  $('page-2').addEventListener('input',function(e){var f=e.target.closest&&e.target.closest('.field');if(f&&f.classList.contains('bad')){f.classList.remove('bad');var er=f.querySelector('.err');if(er)er.textContent='';}});
+  $('page-2').addEventListener('change',function(e){var f=e.target.closest&&e.target.closest('.field');if(f&&f.classList.contains('bad')){f.classList.remove('bad');var er=f.querySelector('.err');if(er)er.textContent='';}});
+  applyBookingState();
+  setInterval(applyBookingState,60000);           /* 頁面開著時也會自動切換公告與預約開關 */
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)applyBookingState();});
+  updateCounters();updatePreview();
+}
+init();
+
+/* 提供測試用的入口（不含任何資料） */
+window.__tarot={bookingState:bookingState,twToday:twToday,buildMsg:buildMsg};
+})();
+</script>
+</body>
+</html>
